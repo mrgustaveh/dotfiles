@@ -40,13 +40,32 @@ install_packages() {
   log "Enabling universe repository"
   sudo add-apt-repository -y universe
 
+  log "Adding Hyprwm PPA (hyprland, hypridle, hyprlock)"
+  sudo add-apt-repository -y ppa:hyprwm/hyprland
+
   install_brave
+  install_swww
   install_yazi
 
   log "Installing apt packages"
   sudo apt-get update
   mapfile -t pkgs < <(grep -Ev '^\s*(#|$)' "$PACKAGES")
   sudo apt-get install -y "${pkgs[@]}"
+}
+
+install_swww() {
+  if command -v swww >/dev/null 2>&1; then
+    log "swww already installed, skipping"
+    return
+  fi
+  log "Installing swww from GitHub releases"
+  local tmp
+  tmp="$(mktemp -d)"
+  curl -fsSL "https://github.com/LGFae/swww/releases/latest/download/swww-x86_64-unknown-linux-musl.tar.gz" \
+    | tar -xz -C "$tmp"
+  sudo install -m 0755 "${tmp}/swww" /usr/local/bin/swww
+  sudo install -m 0755 "${tmp}/swww-daemon" /usr/local/bin/swww-daemon
+  rm -rf "$tmp"
 }
 
 install_brave() {
