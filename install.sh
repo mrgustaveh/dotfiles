@@ -40,6 +40,9 @@ install_packages() {
   log "Enabling universe repository"
   sudo add-apt-repository -y universe
 
+  log "Adding Hyprland PPA (hyprland, hypridle, hyprlock)"
+  sudo add-apt-repository -y ppa:cppiber/hyprland
+
   install_brave
 
   log "Installing apt packages"
