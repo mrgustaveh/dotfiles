@@ -7,8 +7,8 @@ stow
 
 # Apps opened from Hyprland keybinds / scripts
 btop
+firefox
 # yazi: installed from GitHub releases by install.sh (not in apt)
-# google-chrome-stable: installed via Google apt repo by install.sh
 
 # Hyprland utilities
 grim
@@ -18,9 +18,16 @@ brightnessctl
 wireplumber
 hypridle
 hyprlock
-# swww and swaync are not in Ubuntu/Pop apt; install manually if needed
+swww
+sway-notification-center
+wf-recorder
 socat
 jq
+
+# System utilities
+libnotify-bin
+bc
+network-manager
 
 # Fonts used by waybar/kitty config
 fonts-jetbrains-mono

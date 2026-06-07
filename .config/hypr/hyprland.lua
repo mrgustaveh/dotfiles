@@ -1,7 +1,7 @@
 -- Globals shared across all modules
 MAIN_MOD     = "SUPER"
 TERMINAL     = "kitty"
-BROWSER      = "~/.config/hypr/scripts/chrome.sh"
+BROWSER      = "firefox"
 FILE_MANAGER = "~/.config/hypr/scripts/yazi.sh"
 MENU         = "rofi -show drun -modes drun,run -theme ~/.config/rofi/config.rasi"
 WINDOW_MENU  = "~/.config/rofi/scripts/rofi-window.sh"
