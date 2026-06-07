@@ -37,10 +37,47 @@ install_packages() {
     return
   fi
 
+  log "Enabling universe repository"
+  sudo add-apt-repository -y universe
+
+  install_chrome
+  install_yazi
+
   log "Installing apt packages"
   sudo apt-get update
   mapfile -t pkgs < <(grep -Ev '^\s*(#|$)' "$PACKAGES")
   sudo apt-get install -y "${pkgs[@]}"
+}
+
+install_chrome() {
+  if command -v google-chrome-stable >/dev/null 2>&1; then
+    log "Google Chrome already installed, skipping"
+    return
+  fi
+  log "Adding Google Chrome apt repository"
+  curl -fsSL https://dl.google.com/linux/linux_signing_key.pub \
+    | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+  echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] \
+http://dl.google.com/linux/chrome/deb/ stable main" \
+    | sudo tee /etc/apt/sources.list.d/google-chrome.list > /dev/null
+  sudo apt-get update
+  sudo apt-get install -y google-chrome-stable
+}
+
+install_yazi() {
+  if command -v yazi >/dev/null 2>&1; then
+    log "yazi already installed, skipping"
+    return
+  fi
+  log "Installing yazi from GitHub releases"
+  local tmp
+  tmp="$(mktemp -d)"
+  local archive="${tmp}/yazi.zip"
+  curl -fsSL "https://github.com/sxyazi/yazi/releases/latest/download/yazi-x86_64-unknown-linux-gnu.zip" \
+    -o "$archive"
+  unzip -q "$archive" -d "$tmp"
+  sudo install -m 0755 "${tmp}/yazi-x86_64-unknown-linux-gnu/yazi" /usr/local/bin/yazi
+  rm -rf "$tmp"
 }
 
 stage_tree() {
@@ -154,6 +191,11 @@ setup_desktop_entries() {
 }
 
 main() {
+  if [[ "${SKIP_PACKAGES:-0}" != "1" ]] && command -v apt-get >/dev/null 2>&1; then
+    log "Ensuring bootstrap dependencies (curl, unzip)"
+    sudo apt-get update -qq
+    sudo apt-get install -y curl unzip
+  fi
   install_packages
   link_dotfiles
   link_wallpapers

@@ -6,9 +6,9 @@ rofi
 stow
 
 # Apps opened from Hyprland keybinds / scripts
-yazi
 btop
-google-chrome-stable
+# yazi: installed from GitHub releases by install.sh (not in apt)
+# google-chrome-stable: installed via Google apt repo by install.sh
 
 # Hyprland utilities
 grim
@@ -16,9 +16,9 @@ slurp
 wl-clipboard
 brightnessctl
 wireplumber
-# swww and swaync are not in Ubuntu/Pop apt; install manually if needed
 hypridle
 hyprlock
+# swww and swaync are not in Ubuntu/Pop apt; install manually if needed
 socat
 jq
 
