@@ -40,9 +40,6 @@ install_packages() {
   log "Enabling universe repository"
   sudo add-apt-repository -y universe
 
-  log "Adding Hyprwm PPA (hyprland, hypridle, hyprlock)"
-  sudo add-apt-repository -y ppa:hyprwm/hyprland
-
   install_brave
   install_swww
   install_yazi
