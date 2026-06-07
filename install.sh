@@ -56,10 +56,17 @@ install_swww() {
     return
   fi
   log "Installing swww from GitHub releases"
+  local url
+  url=$(curl -fsSL "https://api.github.com/repos/LGFae/swww/releases/latest" \
+    | grep -o '"browser_download_url":"[^"]*x86_64-unknown-linux-musl\.tar\.gz"' \
+    | grep -o 'https://[^"]*')
+  if [[ -z "$url" ]]; then
+    echo "Failed to resolve swww download URL from GitHub API" >&2
+    exit 1
+  fi
   local tmp
   tmp="$(mktemp -d)"
-  curl -fsSL "https://github.com/LGFae/swww/releases/latest/download/swww-x86_64-unknown-linux-musl.tar.gz" \
-    | tar -xz -C "$tmp"
+  curl -fsSL "$url" | tar -xz -C "$tmp"
   sudo install -m 0755 "${tmp}/swww" /usr/local/bin/swww
   sudo install -m 0755 "${tmp}/swww-daemon" /usr/local/bin/swww-daemon
   rm -rf "$tmp"
