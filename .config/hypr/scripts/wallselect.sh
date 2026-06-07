@@ -4,9 +4,6 @@ WALL_DIR="$HOME/Pictures/wallpapers"
 STATE_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/hypr/wallcycle-current"
 ROFI_THEME="$HOME/.config/rofi/wallpaper.rasi"
 
-pgrep -x swww-daemon >/dev/null || swww-daemon &
-sleep 0.5
-
 mapfile -t WALLS < <(
   find -L "$WALL_DIR" -mindepth 1 -type f \
     \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \) \
@@ -29,10 +26,13 @@ SELECTED_INDEX=$(
 WALL="${WALLS[$SELECTED_INDEX]}"
 [[ -n "$WALL" ]] || exit 0
 
-if swww img "$WALL" \
-  --transition-type grow \
-  --transition-duration 1; then
-  mkdir -p "$(dirname "$STATE_FILE")"
-  printf '%s\n' "$WALL" >"$STATE_FILE"
-  notify-send "Wallpaper changed" "$(basename "$WALL")" --icon "$WALL" 2>/dev/null || true
-fi
+CURRENT=""
+[[ -f "$STATE_FILE" ]] && CURRENT=$(cat "$STATE_FILE")
+
+hyprctl hyprpaper preload "$WALL"
+hyprctl hyprpaper wallpaper ",$WALL"
+[[ -n "$CURRENT" ]] && hyprctl hyprpaper unload "$CURRENT" 2>/dev/null || true
+
+mkdir -p "$(dirname "$STATE_FILE")"
+printf '%s\n' "$WALL" > "$STATE_FILE"
+notify-send "Wallpaper changed" "$(basename "$WALL")" --icon "$WALL" 2>/dev/null || true

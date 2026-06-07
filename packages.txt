@@ -18,8 +18,8 @@ brightnessctl
 wireplumber
 hypridle
 hyprlock
+hyprpaper
 sway-notification-center
-# swww: installed from GitHub releases by install.sh (not in apt)
 wf-recorder
 socat
 jq

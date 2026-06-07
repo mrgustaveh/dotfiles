@@ -50,36 +50,7 @@ install_packages() {
   mapfile -t pkgs < <(grep -Ev '^\s*(#|$)' "$PACKAGES")
   sudo apt-get install -y "${pkgs[@]}"
 
-  install_swww
   install_yazi
-}
-
-install_swww() {
-  if command -v swww >/dev/null 2>&1; then
-    log "swww already installed, skipping"
-    return
-  fi
-  log "Installing swww from GitHub releases"
-  local url
-  url=$(curl -fsSL "https://api.github.com/repos/LGFae/swww/releases/latest" \
-    | jq -r '.assets[] | select(.name | endswith("x86_64-unknown-linux-musl.tar.gz")) | .browser_download_url')
-  if [[ -z "$url" || "$url" == "null" ]]; then
-    echo "ERROR: could not find swww download URL in GitHub API response" >&2
-    exit 1
-  fi
-  local tmp
-  tmp="$(mktemp -d)"
-  curl -fsSL "$url" | tar -xz -C "$tmp"
-  local swww_bin swww_daemon_bin
-  swww_bin=$(find "$tmp" -name "swww" -type f | head -1)
-  swww_daemon_bin=$(find "$tmp" -name "swww-daemon" -type f | head -1)
-  if [[ -z "$swww_bin" || -z "$swww_daemon_bin" ]]; then
-    echo "ERROR: swww binaries not found in downloaded archive" >&2
-    exit 1
-  fi
-  sudo install -m 0755 "$swww_bin" /usr/local/bin/swww
-  sudo install -m 0755 "$swww_daemon_bin" /usr/local/bin/swww-daemon
-  rm -rf "$tmp"
 }
 
 install_brave() {
