@@ -40,12 +40,27 @@ install_packages() {
   log "Enabling universe repository"
   sudo add-apt-repository -y universe
 
+  install_brave
   install_yazi
 
   log "Installing apt packages"
   sudo apt-get update
   mapfile -t pkgs < <(grep -Ev '^\s*(#|$)' "$PACKAGES")
   sudo apt-get install -y "${pkgs[@]}"
+}
+
+install_brave() {
+  if command -v brave-browser >/dev/null 2>&1; then
+    log "Brave already installed, skipping"
+    return
+  fi
+  log "Adding Brave apt repository"
+  curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg \
+    https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+  echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" \
+    | sudo tee /etc/apt/sources.list.d/brave-browser-release.list > /dev/null
+  sudo apt-get update
+  sudo apt-get install -y brave-browser
 }
 
 install_yazi() {

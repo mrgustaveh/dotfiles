@@ -7,7 +7,7 @@ stow
 
 # Apps opened from Hyprland keybinds / scripts
 btop
-firefox
+# brave-browser: installed via Brave apt repo by install.sh (not in standard apt)
 # yazi: installed from GitHub releases by install.sh (not in apt)
 
 # Hyprland utilities
