@@ -73,10 +73,11 @@ install_jetbrains_nerd_font() {
     log "JetBrainsMono Nerd Font already installed, skipping"
     return
   fi
-  log "Installing JetBrainsMono Nerd Font from GitHub releases"
+  log "Installing JetBrainsMono Nerd Font"
   local tmp
   tmp="$(mktemp -d)"
-  curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip" \
+  curl --retry 3 --retry-delay 5 -fsSL \
+    "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip" \
     -o "${tmp}/JetBrainsMono.zip"
   mkdir -p "$HOME/.local/share/fonts/JetBrainsMono"
   unzip -q "${tmp}/JetBrainsMono.zip" -d "$HOME/.local/share/fonts/JetBrainsMono"

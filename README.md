@@ -87,14 +87,16 @@ Use a **private** repo unless you have audited for secrets.
 
 Create untracked files under `local/` or add a host profile later if laptop/desktop configs diverge.
 
-#### fonts
+#### fonts (manual setup)
 - Step 1 — Install the font:
   mkdir -p ~/.local/share/fonts/JetBrainsMono
-  curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip" \
+  curl --retry 3 --retry-delay 5 -fsSL \
+    "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip" \
     -o /tmp/JetBrainsMono.zip
   unzip -q /tmp/JetBrainsMono.zip -d ~/.local/share/fonts/JetBrainsMono
   fc-cache -f ~/.local/share/fonts
   rm /tmp/JetBrainsMono.zip
+
 
 - Step 2 — Restart waybar:
   pkill waybar; ~/.config/waybar/launch.sh &
