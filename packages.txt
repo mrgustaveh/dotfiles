@@ -29,5 +29,4 @@ libnotify-bin
 bc
 network-manager
 
-# Fonts used by waybar/kitty config
-fonts-jetbrains-mono
+# Fonts: JetBrainsMono Nerd Font installed from GitHub releases by install.sh

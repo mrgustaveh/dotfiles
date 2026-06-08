@@ -50,6 +50,7 @@ install_packages() {
   mapfile -t pkgs < <(grep -Ev '^\s*(#|$)' "$PACKAGES")
   sudo apt-get install -y "${pkgs[@]}"
 
+  install_jetbrains_nerd_font
   install_yazi
 }
 
@@ -65,6 +66,28 @@ install_brave() {
     | sudo tee /etc/apt/sources.list.d/brave-browser-release.list > /dev/null
   sudo apt-get update
   sudo apt-get install -y brave-browser
+}
+
+install_jetbrains_nerd_font() {
+  if fc-list | grep -q "JetBrainsMono Nerd Font"; then
+    log "JetBrainsMono Nerd Font already installed, skipping"
+    return
+  fi
+  log "Installing JetBrainsMono Nerd Font from GitHub releases"
+  local url
+  url=$(curl -fsSL "https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest" \
+    | jq -r '.assets[] | select(.name == "JetBrainsMono.zip") | .browser_download_url')
+  if [[ -z "$url" || "$url" == "null" ]]; then
+    echo "ERROR: could not find JetBrainsMono.zip in Nerd Fonts release" >&2
+    exit 1
+  fi
+  local tmp
+  tmp="$(mktemp -d)"
+  curl -fsSL "$url" -o "${tmp}/JetBrainsMono.zip"
+  mkdir -p "$HOME/.local/share/fonts/JetBrainsMono"
+  unzip -q "${tmp}/JetBrainsMono.zip" -d "$HOME/.local/share/fonts/JetBrainsMono"
+  fc-cache -f "$HOME/.local/share/fonts"
+  rm -rf "$tmp"
 }
 
 install_yazi() {
