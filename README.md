@@ -100,3 +100,10 @@ Create untracked files under `local/` or add a host profile later if laptop/desk
 
 - Step 2 — Restart waybar:
   pkill waybar; ~/.config/waybar/launch.sh &
+
+### system wallpapers (manual setup)
+```bash
+mkdir -p ~/Pictures/wallpapers
+ln -sfnT ~/Desktop/vico/dotfiles/wallpapers ~/Pictures/wallpapers/dotfiles
+ln -sfnT /usr/share/backgrounds ~/Pictures/wallpapers/system
+```

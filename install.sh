@@ -192,11 +192,14 @@ make_scripts_executable() {
 
 link_wallpapers() {
   log "Linking wallpapers to ~/Pictures/wallpapers"
-  mkdir -p "${HOME}/Pictures"
-  if [[ -e "${HOME}/Pictures/wallpapers" && ! -L "${HOME}/Pictures/wallpapers" ]]; then
-    rm -rf "${HOME}/Pictures/wallpapers"
+  mkdir -p "${HOME}/Pictures/wallpapers"
+  if [[ -e "${HOME}/Pictures/wallpapers/dotfiles" && ! -L "${HOME}/Pictures/wallpapers/dotfiles" ]]; then
+    rm -rf "${HOME}/Pictures/wallpapers/dotfiles"
   fi
-  ln -sfnT "${DOTFILES}/wallpapers" "${HOME}/Pictures/wallpapers"
+  ln -sfnT "${DOTFILES}/wallpapers" "${HOME}/Pictures/wallpapers/dotfiles"
+  if [[ -d "/usr/share/backgrounds" ]]; then
+    ln -sfnT "/usr/share/backgrounds" "${HOME}/Pictures/wallpapers/system"
+  fi
 }
 
 setup_runtime_dirs() {
