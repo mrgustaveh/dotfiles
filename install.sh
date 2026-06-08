@@ -74,16 +74,10 @@ install_jetbrains_nerd_font() {
     return
   fi
   log "Installing JetBrainsMono Nerd Font from GitHub releases"
-  local url
-  url=$(curl -fsSL "https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest" \
-    | jq -r '.assets[] | select(.name == "JetBrainsMono.zip") | .browser_download_url')
-  if [[ -z "$url" || "$url" == "null" ]]; then
-    echo "ERROR: could not find JetBrainsMono.zip in Nerd Fonts release" >&2
-    exit 1
-  fi
   local tmp
   tmp="$(mktemp -d)"
-  curl -fsSL "$url" -o "${tmp}/JetBrainsMono.zip"
+  curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip" \
+    -o "${tmp}/JetBrainsMono.zip"
   mkdir -p "$HOME/.local/share/fonts/JetBrainsMono"
   unzip -q "${tmp}/JetBrainsMono.zip" -d "$HOME/.local/share/fonts/JetBrainsMono"
   fc-cache -f "$HOME/.local/share/fonts"
