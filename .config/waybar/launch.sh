@@ -8,10 +8,10 @@ width=$(hyprctl monitors -j 2>/dev/null | python3 -c "
 import json, sys
 try:
     monitors = json.load(sys.stdin)
+    focused = next((m for m in monitors if m.get('focused')), monitors[0] if monitors else None)
+    print(focused['width'] if focused else 1440)
 except Exception:
-    monitors = []
-focused = next((m for m in monitors if m.get('focused')), monitors[0] if monitors else None)
-print(focused['width'] if focused else 1440)
+    print(1440)
 ")
 
 if ! [[ "$width" =~ ^[0-9]+$ ]] || [ "$width" -eq 0 ]; then
@@ -34,11 +34,6 @@ with open(base_path, encoding="utf-8") as f:
 config["margin-top"] = 8
 config["margin-left"] = margin
 config["margin-right"] = margin
-
-try:
-    subprocess.check_output(["hyprctl", "workspaces", "-j"])
-except Exception:
-    pass
 
 max_id = 12
 
